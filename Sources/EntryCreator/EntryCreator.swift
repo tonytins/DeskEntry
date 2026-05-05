@@ -35,8 +35,8 @@ struct EntryCreator: ParsableCommand {
     /// Print the entry and path below.
     func printEntry(content: String, directory: String) {
         let sample = """
-        \(content) \
-        === \
+        \(content)
+        ===
         \(directory)
         """
         print(sample)
@@ -45,7 +45,7 @@ struct EntryCreator: ParsableCommand {
     mutating func run() throws {
         let environment = ProcessInfo.processInfo.environment
 
-        let loc = ".local//share//applications"
+        let loc = ".local/share/applications"
         let entry = """
         [Desktop Entry]
         Type=Application
@@ -63,25 +63,20 @@ struct EntryCreator: ParsableCommand {
             home = environment["userprofile"]!
         #endif
 
-        let file = "\(home)//\(loc)//\(name).desktop"
+        let file = "\(home)/\(loc)/\(name).desktop"
 
-        switch dryRun {
-        case true:
+        if dryRun {
             printEntry(content: entry, directory: file)
-        default:
+        } else {
             #if os(Linux)
-                switch home.isEmpty {
-                case true:
+                guard !home.isEmpty else {
                     printEntry(content: entry, directory: file)
-                default:
                     do {
                         try entry.write(
-                            toFile: file,
-                            atomically: true,
-                            encoding: .utf8
+                            toFile: file, atomically: true, encoding: .utf8,
                         )
                     } catch {
-                        print("Error: \\(error)")
+                        print("Error: \(error)")
                     }
                 }
             #else

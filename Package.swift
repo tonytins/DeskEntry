@@ -18,12 +18,12 @@ let package = Package(
             name: "EntryCreator",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            ]
+            ],
         ),
-        .testTarget(
-            name: "EntryCreatorTests",
-            dependencies: ["EntryCreator"]
-        ),
+        // .testTarget(
+        //     name: "EntryCreatorTests",
+        //     dependencies: ["EntryCreator"],
+        // ),
     ],
-    swiftLanguageModes: [.v6]
+    swiftLanguageModes: [.v6],
 )

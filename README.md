@@ -2,11 +2,19 @@
 
 DeskEntry is a simple CLI tool for Linux that streamlines the process of making desktop entries.
 
-## Quick Start
+## Minimum Requirements
 
-### Prerequisites
+### Development
 
-- Swift 6 or later
+- Swift 6.3+
+
+### Deployment
+
+| Target  | Version | Code Name   |
+| ------- | ------- | ----------- |
+| Ubuntu  | 20.04   | Focal Fossa |
+| Debian  | 12      | Bookworm    |
+| Fedora  | 39      | N/A         |
 
 On macOS and Windows, it'll fallback to dry run mode.
 
