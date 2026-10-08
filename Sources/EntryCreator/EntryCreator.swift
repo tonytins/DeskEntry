@@ -33,13 +33,21 @@ struct EntryCreator: ParsableCommand {
     var dryRun: Bool = false
 
     /// Print the entry and path below.
-    func printEntry(content: String, directory: String) {
-        let sample = """
+    func printEntry(content: String, directory: String, wroteToFile: Bool = false) {
+        var sample = """
         \(content)
-        ===
-        \(directory)
         """
+
+        if wroteToFile {
+            sample = """
+            \(content)
+            ===
+            File written to: \(directory)
+            """
+        }
+
         print(sample)
+
     }
 
     mutating func run() throws {
@@ -69,15 +77,13 @@ struct EntryCreator: ParsableCommand {
             printEntry(content: entry, directory: file)
         } else {
             #if os(Linux)
-                guard !home.isEmpty else {
+                do {
+                    try entry.write(
+                        toFile: file, atomically: true, encoding: .utf8,
+                    )
+                    printEntry(content: entry, directory: file, wroteToFile: true)
+                } catch {
                     printEntry(content: entry, directory: file)
-                    do {
-                        try entry.write(
-                            toFile: file, atomically: true, encoding: .utf8,
-                        )
-                    } catch {
-                        print("Error: \(error)")
-                    }
                 }
             #else
                 printEntry(content: entry, directory: file)
