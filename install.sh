@@ -1,25 +1,24 @@
 #!/bin/sh
 
-BUILD=debug # Change to release for a release build
+BUILD_MODE=debug # Change to release for a release build
 PROGRAM=deskentry
 
-SOURCE="$PWD/.build/$BUILD/$PROGRAM"
-SOURCE_DIR="$PWD/.build/$BUILD"
+BUILD_DIR="$PWD/.build/$BUILD_MODE"
+EXEC="$BUILD_DIR/$PROGRAM"
 BIN_DIR="$HOME/.local/bin"
 
-# Not the best, but it works.
-if [ -d "$BIN_DIR" ]; then
-    echo "Installing..."
-else
+
+if [ ! -d "$BUILD_DIR" ]; then
+    echo "Executable not found."
+    exit 1
+fi
+
+if [ ! -d "$BIN_DIR" ]; then
+    echo "Creating local bin directory."
     mkdir -p "$BIN_DIR"
-    echo "Installing..."
 fi
 
-if [ -d "$SOURCE_DIR" ]; then
-    cp "$SOURCE" "$BIN_DIR/$PROGRAM"
-    chmod +x "$BIN_DIR/$PROGRAM"
+cp "$EXEC" "$BIN_DIR/$PROGRAM"
+chmod +x "$BIN_DIR/$PROGRAM"
 
-    echo "Installed $PROGRAM to $BIN_DIR/$PROGRAM"
-else
-    echo "$PROGRAM not found."
-fi
+echo "Installed $PROGRAM to $BIN_DIR/$PROGRAM"
