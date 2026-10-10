@@ -32,6 +32,12 @@ struct EntryCreator: ParsableCommand {
     @Flag(name: .shortAndLong)
     var dryRun: Bool = false
 
+    @Flag(name: .shortAndLong)
+    var noDisplay: Bool = false
+
+    @Flag(name: .shortAndLong)
+    var startupNotify: Bool = false
+
     /// Print the entry and path below.
     func printEntry(content: String, directory: String, wroteToFile: Bool = false) {
         var sample = """
@@ -53,7 +59,7 @@ struct EntryCreator: ParsableCommand {
     mutating func run() throws {
         let environment = ProcessInfo.processInfo.environment
 
-        let loc = ".local/share/applications"
+        let loc = ".var/app/"
         let entry = """
         [Desktop Entry]
         Type=Application
@@ -62,6 +68,8 @@ struct EntryCreator: ParsableCommand {
         Path=\(path)
         Exec=\(exec)
         Icon=\(icon)
+        NoDisplay=\(noDisplay)
+        StartupNotify=false
         Terminal=\(terminal)
         Categories=\(categories)
         """
@@ -79,11 +87,17 @@ struct EntryCreator: ParsableCommand {
             #if os(Linux)
                 do {
                     try entry.write(
-                        toFile: file, atomically: true, encoding: .utf8,
+                        toFile: file,
+                        atomically: true,
+                        encoding: .utf8,
                     )
-                    printEntry(content: entry, directory: file, wroteToFile: true)
+                    printEntry(
+                        content: entry,
+                        directory: file,
+                        wroteToFile: true
+                    )
                 } catch {
-                    printEntry(content: entry, directory: file)
+                    print("Error writing to \(file).")
                 }
             #else
                 printEntry(content: entry, directory: file)
